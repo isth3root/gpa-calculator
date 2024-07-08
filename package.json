@@ -1,8 +1,8 @@
 {
   "name": "gpa-calculator",
   "private": true,
-  "homepage": "https://isth3root.github.oi/gpa-calculator",
-  "version": "0.0.0",
+  "homepage": "https://isth3root.github.io/gpa-calculator",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "deploy": "gh-pages -d dist",
