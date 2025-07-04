@@ -12,6 +12,7 @@ const GPAForm: React.FC = () => {
     },
   ]);
   const [showGPA, setShowGPA] = useState(false);
+  const [crypticMessage, setCrypticMessage] = useState("");
   const [isAddLessonDisabled, setIsAddLessonDisabled] = useState(true);
 
   useEffect(() => {
@@ -76,90 +77,127 @@ const GPAForm: React.FC = () => {
     return totalCourses ? (totalPoints / totalCourses).toFixed(2) : "0.00";
   };
 
-  const handleSubmit = () => {
-    if (lessons.length > 1) {
-      setShowGPA(true);
+  const getCrypticMessage = (gpaScore: number, hasSignificantInput: boolean): string => {
+    if (!hasSignificantInput) {
+        return "The scroll is blank... judgment awaits.";
     }
+    if (isNaN(gpaScore)) {
+      return "The runes are muddled, your fate unclear.";
+    }
+    // Check for 0 GPA specifically, can occur if all grades are 0 but courses exist
+    if (gpaScore === 0) {
+        return "Emptiness stares back... a void of effort, or perhaps, a path yet untrodden?";
+    }
+    if (gpaScore > 0 && gpaScore < 10) {
+      return "Whispers from the shadows speak of your struggles...";
+    }
+    if (gpaScore >= 10 && gpaScore < 14) {
+      return "A precarious balance... the path is still dark, tread carefully.";
+    }
+    if (gpaScore >= 14 && gpaScore < 18) {
+      return "You navigate the arcane path with growing confidence. The spirits are watching.";
+    }
+    if (gpaScore >= 18 && gpaScore <= 20) {
+      return "The ancient texts illuminate your way! A true scholar of the unseen arts.";
+    }
+    return "The runes are muddled, your fate unclear."; // Default for unexpected values
   };
 
+  const handleSubmit = () => {
+    const hasSignificantInput = lessons.some(
+      (lesson) => lesson.courses > 0 // We only really need courses to be > 0 for a calculation
+    );
+
+    const gpaValue = parseFloat(calculateGPA());
+    setCrypticMessage(getCrypticMessage(gpaValue, hasSignificantInput));
+    setShowGPA(true);
+  };
+
+  const canCalculate = lessons.some(lesson => lesson.courses > 0 && lesson.grade > 0 && lesson.grade <=20 && lesson.courses <=5 );
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen font-yekan font-bold text-md select-none">
-      <div className="mb-5">
-        <h1 className="text-3xl">محاسبه معدل</h1>
-        <ul className="mt-5">
-          <li>توجه : نام درس الزامی نیست.</li>
+    <div className="flex flex-col items-center justify-center min-h-screen font-creepy select-none p-4">
+      <div className="mb-10 text-center">
+        <h1 className="title-creepy text-flicker">The Scholarly Reckoning</h1>
+        <ul className="mt-3 text-sm text-gray-400">
+          <li>(Lesson name is optional, mortal)</li>
         </ul>
       </div>
-      <div className="container p-4 flex flex-col items-center">
+      <div className="container p-6 bg-gray-800 rounded-lg shadow-xl flex flex-col items-center max-w-2xl w-full">
         {lessons.map((lesson, index) => (
-          <div key={index} className="mb-4 flex items-center">
+          <div key={index} className="mb-6 flex items-center w-full gap-3">
             <Input
               type="text"
-              placeholder="نام درس"
+              placeholder="Subject of Dread"
               value={lesson.name}
               onChange={(e) =>
                 handleLessonChange(index, "name", e.target.value)
               }
-              className="border p-2 rounded-lg focus:shadow-lg outline-none w-1/4"
-              maxLength={20}
+              className="input-creepy flex-grow"
+              maxLength={30}
             />
             <Input
               type="number"
-              placeholder="نمره"
+              placeholder="Effort (0-20)"
               value={lesson.grade === 0 ? "" : lesson.grade.toString()}
               onChange={(e) =>
                 handleLessonChange(index, "grade", Number(e.target.value))
               }
-              className="border p-2 mr-2 rounded-lg focus:shadow-lg outline-none w-1/5"
+              className="input-creepy w-1/4"
               min={0}
               max={20}
               step={0.25}
             />
             <Input
               type="number"
-              placeholder="واحد"
+              placeholder="Units of Sanity"
               value={lesson.courses === 0 ? "" : lesson.courses.toString()}
               onChange={(e) =>
                 handleLessonChange(index, "courses", Number(e.target.value))
               }
-              className="border p-2 mr-2 rounded-lg focus:shadow-lg outline-none w-1/5"
+              className="input-creepy w-1/4"
               min={1}
               max={5}
             />
             <Button
               onClick={() => deleteLessonField(index)}
-              className={`bg-red-600 text-white p-2 ml-2 rounded mr-3 w-1/5  ${
+              className={`button-creepy button-delete-creepy w-auto px-3 ${
                 lessons.length === 1
                   ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-red-700"
+                  : ""
               }`}
-              value="حذف"
+              value="Banish"
               disabled={lessons.length === 1}
             />
           </div>
         ))}
 
-        <div className="flex gap-5">
+        <div className="flex gap-5 mt-4">
           <Button
             onClick={addLessonField}
-            className={`bg-[#367588] text-white p-2 rounded mr-2  ${
+            className={`button-creepy button-add-creepy ${
               isAddLessonDisabled
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-[#448396]"
+                : ""
             }`}
             disabled={isAddLessonDisabled}
-            value="اضافه کردن"
+            value="Summon Another"
           />
           <Button
             onClick={handleSubmit}
-            className="bg-[#228B22] text-white p-2 rounded hover:bg-[#3bb43b]"
-            disabled={false}
-            value="حساب کن"
+            className={`button-creepy button-calculate-creepy ${
+              !canCalculate && lessons.length > 0 // Allow click if empty to show "blank scroll"
+                ? (lessons.length === 1 && lessons[0].grade === 0 && lessons[0].courses === 0 ? "" :"opacity-50 cursor-not-allowed")
+                : ""
+            }`}
+            disabled={!canCalculate && !(lessons.length === 1 && lessons[0].grade === 0 && lessons[0].courses === 0 && lessons[0].name === "")}
+            value="Reveal Fate"
           />
         </div>
         {showGPA && (
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold">معدل: {calculateGPA()}</h2>
+          <div className="mt-8 text-center">
+            <h2 className="gpa-result-creepy">Calculated Doom: {calculateGPA()}</h2>
+            {crypticMessage && <p className="text-gray-400 mt-2 text-lg">{crypticMessage}</p>}
           </div>
         )}
       </div>
