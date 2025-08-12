@@ -1,94 +1,28 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/fontsource-creepster/5.2.6/index.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-    body {
-        @apply bg-gray-900 text-red-500;
-        font-family: 'Creepster', cursive;
-    }
-
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Basic input styling */
-    input, select {
-        @apply bg-gray-800 border-gray-700 text-red-400 focus:ring-red-600 focus:border-red-600;
-    }
-
-    /* Button base styling */
-    button {
-        @apply font-bold py-2 px-4 rounded;
-    }
+:root {
+  --color-primary: #4f46e5;
+  --color-secondary: #ec4899;
+  --color-background: #f3f4f6;
+  --color-text: #111827;
+  --color-accent: #10b981;
 }
 
-/* Custom component styles */
-.btn-delete {
-    @apply bg-red-700 hover:bg-red-800 text-white;
+.dark {
+  --color-primary: #6366f1;
+  --color-secondary: #f472b6;
+  --color-background: #111827;
+  --color-text: #f9fafb;
+  --color-accent: #34d399;
 }
 
-.btn-add {
-    @apply bg-green-700 hover:bg-green-800 text-white;
-}
-
-.btn-calculate {
-    @apply bg-blue-700 hover:bg-blue-800 text-white;
-}
-
-/* Specific overrides if Tailwind classes in components are too restrictive */
-.title-creepy {
-    @apply text-5xl text-red-600 mb-8; /* Increased size, changed color, added margin */
-}
-
-.input-creepy {
-    @apply border-2 border-red-700 p-2 rounded-lg focus:shadow-lg focus:shadow-red-500/50 outline-none w-full bg-gray-800 text-red-400 placeholder-gray-500;
-    /* Added placeholder color, ensured full width for consistency in flex */
-}
-
-.button-creepy {
-    @apply text-white p-2 rounded transition-colors duration-300;
-}
-
-.button-delete-creepy {
-    @apply bg-red-800 hover:bg-red-900;
-}
-
-.button-add-creepy {
-    @apply bg-gray-700 hover:bg-gray-600; /* Adjusted for a more "ominous" add */
-}
-
-.button-calculate-creepy {
-    @apply bg-purple-700 hover:bg-purple-800; /* Changed to purple for a bit of variety */
-}
-
-.gpa-result-creepy {
-    @apply text-3xl text-green-400 mt-6; /* Make GPA stand out */
-}
-
-/* Text flickering animation */
-@keyframes flicker {
-  0%, 18%, 22%, 25%, 53%, 57%, 100% {
-    text-shadow:
-      0 0 4px #fff,
-      0 0 10px #fff,
-      0 0 20px #ff0000, /* Main flicker color - red */
-      0 0 40px #ff0000,
-      0 0 60px #ff0000,
-      0 0 80px #ff0000,
-      0 0 120px #ff0000;
-    opacity: 0.8;
-  }
-  20%, 24%, 55% {
-    text-shadow: none;
-    opacity: 0.4;
-  }
-}
-
-.text-flicker {
-  animation: flicker 3s infinite alternate;
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color 0.3s, color 0.3s;
 }
